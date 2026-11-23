@@ -1,0 +1,39 @@
+{
+  "LogReg": {
+    "C": 0.15917119469683638
+  },
+  "RandomForest": {
+    "n_estimators": 200,
+    "max_depth": 18,
+    "min_samples_leaf": 1,
+    "max_features": "sqrt",
+    "max_samples": 0.7600340105889054
+  },
+  "XGBoost": {
+    "n_estimators": 600,
+    "learning_rate": 0.0107147779251942,
+    "max_depth": 8,
+    "min_child_weight": 13.083535166074332,
+    "subsample": 0.7184398438770567,
+    "colsample_bytree": 0.5340083659311112,
+    "reg_lambda": 0.11164694456660351,
+    "reg_alpha": 0.028447008560140482,
+    "gamma": 0.09301729499307994
+  },
+  "LightGBM": {
+    "n_estimators": 700,
+    "learning_rate": 0.010973497169853278,
+    "num_leaves": 32,
+    "min_child_samples": 86,
+    "subsample": 0.8152596233055224,
+    "colsample_bytree": 0.765898688500971,
+    "reg_lambda": 1.2940840857091198,
+    "reg_alpha": 0.526470907119869
+  },
+  "MLP": {
+    "hidden": "128",
+    "alpha": 5.415244119402538e-05,
+    "lr": 0.0004059611610484307,
+    "batch_size": 128
+  }
+}

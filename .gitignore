@@ -1,0 +1,23 @@
+# --- MIMIC-IV credentialed data: never commit (PhysioNet data-use agreement) ---
+data/
+*.csv.gz
+*.parquet
+*.zip
+*.feather
+*.pkl
+*.joblib
+2_model/saved_models/
+
+# --- environments and caches ---
+.venv/
+venv/
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+
+# --- local tooling ---
+.claude/
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini

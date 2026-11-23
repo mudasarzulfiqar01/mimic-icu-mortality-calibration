@@ -1,0 +1,56 @@
+{
+  "final_model": "Ensemble",
+  "members": [
+    "XGBoost",
+    "LightGBM",
+    "MLP"
+  ],
+  "calibration": {
+    "XGBoost": "isotonic",
+    "LightGBM": "isotonic",
+    "MLP": "isotonic"
+  },
+  "split": {
+    "Train": 33176,
+    "Validation": 8294,
+    "Test": 10368
+  },
+  "test": {
+    "AUROC": "0.892 (0.884\u20130.900)",
+    "AUPRC": "0.559 (0.527\u20130.585)",
+    "Brier": "0.066 (0.063\u20130.069)",
+    "ECE": "0.003 (0.003\u20130.009)",
+    "Cal_slope": "1.014 (0.964\u20131.068)",
+    "Cal_intercept": "0.011 (-0.059\u20130.072)",
+    "Sensitivity": "0.822 (0.801\u20130.843)",
+    "Specificity": "0.800 (0.792\u20130.809)",
+    "PPV": "0.329 (0.313\u20130.345)"
+  },
+  "logreg_test": {
+    "AUROC": "0.869 (0.859\u20130.878)",
+    "AUPRC": "0.471 (0.443\u20130.498)",
+    "Brier": "0.071 (0.068\u20130.074)",
+    "ECE": "0.006 (0.004\u20130.011)"
+  },
+  "thresholds": {
+    "youden": 0.12453472882761774,
+    "sens80": 0.13522352719803984
+  },
+  "prevalence_test": 0.10648148148148148,
+  "tuning_gain_AUPRC": {
+    "LogReg": 0.0001,
+    "RandomForest": 0.0024,
+    "XGBoost": 0.0248,
+    "LightGBM": 0.0229,
+    "MLP": 0.0051
+  },
+  "fast_mode": false,
+  "gpu": false,
+  "kaggle": false,
+  "sofa_test": {
+    "AUROC": "0.702 (0.687\u20130.717)",
+    "AUPRC": "0.229 (0.209\u20130.250)",
+    "Brier": "0.088 (0.084\u20130.092)",
+    "ECE": "0.004 (0.003\u20130.011)"
+  }
+}
