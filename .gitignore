@@ -21,3 +21,14 @@ __pycache__/
 .idea/
 Thumbs.db
 desktop.ini
+
+# --- LaTeX build files (report draft PDF is committed only when final) ---
+3_report/*.aux
+3_report/*.log
+3_report/*.bbl
+3_report/*.blg
+3_report/*.out
+3_report/*.fls
+3_report/*.fdb_latexmk
+3_report/*.synctex.gz
+3_report/main.pdf

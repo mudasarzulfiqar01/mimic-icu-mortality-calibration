@@ -59,7 +59,7 @@ AUPRC baseline (prevalence) = 0.106. All models use isotonic recalibration fitte
 
 | Protocol question | Finding |
 |---|---|
-| H3: ML vs. equally tuned logistic regression | XGBoost − LR: **+0.063 AUPRC** (paired bootstrap 95% CI 0.049–0.078); ECE difference not significant |
+| H3: ML vs. equally tuned logistic regression | XGBoost − LR: **+0.062 AUPRC** (paired bootstrap 95% CI 0.049–0.078); ECE difference not significant |
 | RQ5: gain over a published score | LR − SOFA: +0.242 AUPRC; final model − SOFA: +0.330 AUPRC |
 | RQ2: missing data | complete-case training keeps only 15% of stays and lowers AUPRC (LR 0.471 → 0.437, XGBoost 0.534 → 0.503); imputation with/without indicator and XGBoost native NaN handling perform alike |
 | RQ3: temporal hold-out (2020–2022) | small AUROC drop (LR 0.871 → 0.851, XGBoost 0.890 → 0.879) |
