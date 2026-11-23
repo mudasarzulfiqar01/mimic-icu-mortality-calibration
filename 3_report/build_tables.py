@@ -136,14 +136,18 @@ md = pd.read_csv(RES / "protocol_missing_data_strategies.csv")
 allt = md[md["evaluated_on"] == "all test stays"].set_index(["strategy", "model"])
 cc = md[md["evaluated_on"] != "all test stays"].set_index(["strategy", "model"])
 body = []
+SHORT_S = {"Imputation + indicator": "Median + ind.", "Median imputation only": "Median only",
+           "Complete-case": "Complete-case", "Native NaN (XGBoost)": "Native NaN"}
+SHORT_M = {"LogReg": "LR", "XGBoost": "XGB"}
 for (s, m), r in allt.iterrows():
-    body.append(f"{tex(s)} & {NAMES[m]} & {r['train_rows_%']:.0f}\\% & {r['AUROC']:.3f} & {r['AUPRC']:.3f} & {r['ECE']:.3f} & {cc.loc[(s, m), 'AUPRC']:.3f} \\\\")
+    body.append(f"{SHORT_S.get(s, tex(s))} & {SHORT_M.get(m, m)} & {r['train_rows_%']:.0f}\\% & {r['AUROC']:.3f} & "
+                f"{r['AUPRC']:.3f} & {r['ECE']:.3f} & {cc.loc[(s, m), 'AUPRC']:.3f} \\\\")
 write("tab_missing", r"""
 \begin{tabular}{@{}llrrrrr@{}}
 \toprule
- & & & \multicolumn{3}{c}{All test stays} & CC subset \\
+ & & & \multicolumn{3}{c}{All test stays} & CC \\
 \cmidrule(lr){4-6}\cmidrule(lr){7-7}
-Strategy & Model & Train rows & AUROC & AUPRC & ECE & AUPRC \\
+Strategy & Model & Train & AUROC & AUPRC & ECE & AUPRC \\
 \midrule
 """ + "\n".join(body) + r"""
 \bottomrule

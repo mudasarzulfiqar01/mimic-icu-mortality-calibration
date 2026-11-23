@@ -1,15 +1,15 @@
 \begin{tabular}{@{}llrrrrr@{}}
 \toprule
- & & & \multicolumn{3}{c}{All test stays} & CC subset \\
+ & & & \multicolumn{3}{c}{All test stays} & CC \\
 \cmidrule(lr){4-6}\cmidrule(lr){7-7}
-Strategy & Model & Train rows & AUROC & AUPRC & ECE & AUPRC \\
+Strategy & Model & Train & AUROC & AUPRC & ECE & AUPRC \\
 \midrule
-Imputation + indicator & Logistic regression & 100\% & 0.869 & 0.471 & 0.006 & 0.597 \\
-Imputation + indicator & XGBoost & 100\% & 0.890 & 0.534 & 0.002 & 0.660 \\
-Median imputation only & Logistic regression & 100\% & 0.869 & 0.474 & 0.007 & 0.603 \\
-Median imputation only & XGBoost & 100\% & 0.890 & 0.538 & 0.004 & 0.665 \\
-Complete-case & Logistic regression & 15\% & 0.837 & 0.437 & 0.008 & 0.615 \\
-Complete-case & XGBoost & 15\% & 0.873 & 0.503 & 0.003 & 0.648 \\
-Native NaN (XGBoost) & XGBoost & 100\% & 0.889 & 0.532 & 0.005 & 0.663 \\
+Median + ind. & LR & 100\% & 0.869 & 0.471 & 0.006 & 0.597 \\
+Median + ind. & XGB & 100\% & 0.890 & 0.534 & 0.002 & 0.660 \\
+Median only & LR & 100\% & 0.869 & 0.474 & 0.007 & 0.603 \\
+Median only & XGB & 100\% & 0.890 & 0.538 & 0.004 & 0.665 \\
+Complete-case & LR & 15\% & 0.837 & 0.437 & 0.008 & 0.615 \\
+Complete-case & XGB & 15\% & 0.873 & 0.503 & 0.003 & 0.648 \\
+Native NaN & XGB & 100\% & 0.889 & 0.532 & 0.005 & 0.663 \\
 \bottomrule
 \end{tabular}
