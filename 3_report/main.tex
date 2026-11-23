@@ -20,6 +20,15 @@
 \usepackage[hidelinks]{hyperref}
 
 \graphicspath{{figures/}}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\dbltopfraction}{0.9}
+\renewcommand{\bottomfraction}{0.6}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.75}
+\renewcommand{\dblfloatpagefraction}{0.75}
+\setcounter{topnumber}{3}
+\setcounter{dbltopnumber}{3}
+\setcounter{totalnumber}{5}
 \hypersetup{pdftitle={Calibrated Machine-Learning Models for ICU Mortality Prediction on MIMIC-IV},
             pdfsubject={ICU mortality prediction, calibration, MIMIC-IV}}
 \newcommand{\FILL}[1]{{\color{red}[#1]}}
@@ -330,6 +339,98 @@ of 128 units for the MLP. Code, executed notebooks and all result tables are pub
 \section{Results}
 \label{sec:results}
 
+\begin{table*}[!t]
+\caption{Test-set performance (10,368 stays) with 95\% bootstrap confidence intervals}
+\label{tab:results}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\input{tables/tab_results.tex}\\[3pt]
+\parbox{0.97\textwidth}{\scriptsize Sensitivity and specificity use each model's own Youden threshold chosen on the
+validation set. ECE is biased upward under bootstrap resampling, so a point estimate can lie at or below the lower
+limit of its percentile interval.}
+\end{table*}
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=0.8\textwidth]{fig_roc_pr.png}
+\caption{ROC (left) and precision--recall (right) curves on the test set; the dashed line in the right panel marks the
+outcome prevalence.}
+\label{fig:rocpr}
+\end{figure*}
+
+\begin{table}[!t]
+\caption{Test-set calibration before and after isotonic recalibration}
+\label{tab:calib}
+\centering
+\footnotesize
+\input{tables/tab_calibration.tex}
+\end{table}
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=0.8\textwidth]{fig_calibration.png}
+\caption{Reliability curves on the test set (10 equal-frequency bins): all calibrated models (left) and the final
+model before and after recalibration, with its risk distribution (right).}
+\label{fig:calib}
+\end{figure*}
+
+\begin{table}[!t]
+\caption{Paired bootstrap differences on the test set}
+\label{tab:paired}
+\centering
+\footnotesize
+\input{tables/tab_paired.tex}
+\end{table}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{fig_decision_curve.png}
+\caption{Decision-curve analysis on the test set.}
+\label{fig:dca}
+\end{figure}
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=0.85\textwidth]{fig_shap.png}
+\caption{SHAP feature importance (left) and feature effects (right) for XGBoost on 3,000 test stays.}
+\label{fig:shap}
+\end{figure*}
+
+\begin{table}[!t]
+\caption{Range of test-set AUROC across subgroups (groups with $\geq$100 deaths)}
+\label{tab:subgroups}
+\centering
+\footnotesize
+\input{tables/tab_subgroups.tex}
+\end{table}
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=0.95\textwidth]{fig_subgroups.png}
+\caption{Subgroup AUROC with 95\% CIs (left) and observed versus mean predicted mortality (right) for the final model.
+Open markers denote subgroups with fewer than 100 deaths.}
+\label{fig:subgroups}
+\end{figure*}
+
+\begin{table*}[!t]
+\caption{Missing-data strategies (isotonic-calibrated; CC = complete-case test subset)}
+\label{tab:missing}
+\centering
+\footnotesize
+\input{tables/tab_missing.tex}
+\end{table*}
+
+\begin{table}[!t]
+\caption{Temporal hold-out using the admission period}
+\label{tab:temporal}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\input{tables/tab_temporal.tex}
+\end{table}
+
+
 \subsection{Optimization on Training and Validation Data}
 Tuning mainly helped the boosting models, whose cross-validated AUPRC rose by 0.025 (XGBoost) and 0.023 (LightGBM),
 whereas logistic regression and random forest were already near their best with default settings
@@ -353,26 +454,6 @@ every other model ($p\le0.003$), although the margin over XGBoost was only 0.002
 the ensemble identified 907 of 1,104 deaths (sensitivity 0.822) with a specificity of 0.800, a PPV of 0.329 and a
 negative predictive value of 0.974, which corresponds to about 27 alerts per 100 admitted patients.
 
-\begin{table*}[!t]
-\caption{Test-set performance (10,368 stays) with 95\% bootstrap confidence intervals}
-\label{tab:results}
-\centering
-\scriptsize
-\setlength{\tabcolsep}{3.5pt}
-\input{tables/tab_results.tex}\\[3pt]
-\parbox{0.97\textwidth}{\scriptsize Sensitivity and specificity use each model's own Youden threshold chosen on the
-validation set. ECE is biased upward under bootstrap resampling, so a point estimate can lie at or below the lower
-limit of its percentile interval.}
-\end{table*}
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=0.8\textwidth]{fig_roc_pr.png}
-\caption{ROC (left) and precision--recall (right) curves on the test set; the dashed line in the right panel marks the
-outcome prevalence.}
-\label{fig:rocpr}
-\end{figure*}
-
 \subsection{Calibration}
 Before recalibration, the models differed in calibration quality: random forest was under-confident (slope 1.12) and
 the MLP over-confident (slope 0.89). Isotonic recalibration fitted on validation data reduced ECE for every model, for
@@ -382,44 +463,13 @@ intercept of 0.011, and its reliability curve lies on the diagonal across the fu
 The agreement held at the extremes: in the lowest risk decile, observed and predicted mortality were 0.2\% and 0.1\%,
 and in the highest decile 53.9\% and 53.2\%.
 
-\begin{table}[!t]
-\caption{Test-set calibration before and after isotonic recalibration}
-\label{tab:calib}
-\centering
-\footnotesize
-\input{tables/tab_calibration.tex}
-\end{table}
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=0.8\textwidth]{fig_calibration.png}
-\caption{Reliability curves on the test set (10 equal-frequency bins): all calibrated models (left) and the final
-model before and after recalibration, with its risk distribution (right).}
-\label{fig:calib}
-\end{figure*}
-
 \subsection{Machine Learning versus Logistic Regression and SOFA}
-Paired bootstrap differences are shown in Table~\ref{tab:paired} and Fig.~\ref{fig:paired}. With equal tuning on the
+Paired bootstrap differences are shown in Table~\ref{tab:paired}. With equal tuning on the
 same 40 features, XGBoost exceeded logistic regression by 0.062 in AUPRC (95\% CI 0.049--0.078), while the difference
 in ECE ($-0.004$, CI $-0.006$ to 0.003) was not significant. The ensemble improved on logistic regression by 0.087
 (0.073--0.103). The gains over the published score were much larger: 0.242 for logistic regression and 0.330 for the
 ensemble. None of the ECE differences was significant, because recalibration had already made every model well
 calibrated.
-
-\begin{table}[!t]
-\caption{Paired bootstrap differences on the test set}
-\label{tab:paired}
-\centering
-\footnotesize
-\input{tables/tab_paired.tex}
-\end{table}
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=0.78\textwidth]{fig_paired_bootstrap.png}
-\caption{Paired bootstrap differences in AUPRC and ECE with 95\% confidence intervals.}
-\label{fig:paired}
-\end{figure*}
 
 \subsection{Clinical Utility and Explainability}
 In decision-curve analysis (Fig.~\ref{fig:dca}), the ensemble offered a higher net benefit than treating all or no
@@ -428,26 +478,12 @@ for logistic regression and 0.035 for SOFA; at 0.20 the values were 0.047, 0.044
 fitted models over SOFA therefore translates into a practical benefit at the thresholds that matter for escalation
 decisions.
 
-\begin{figure}[!t]
-\centering
-\includegraphics[width=\columnwidth]{fig_decision_curve.png}
-\caption{Decision-curve analysis on the test set.}
-\label{fig:dca}
-\end{figure}
-
 The SHAP analysis of XGBoost (Fig.~\ref{fig:shap}) identified first-day urine output, maximum blood urea nitrogen,
 the GCS motor, verbal and eye components, mean respiratory rate, admission to the cardiac surgery ICU, the
 BUN/creatinine ratio, Medicare insurance and elective surgical admission as the most influential features. Their directions are
 clinically plausible: low urine output, high urea, a low GCS and tachypnea raised the predicted risk, whereas cardiac
 surgery and elective admissions lowered it. Medicare coverage, which in this population largely reflects older age,
 increased the predicted risk.
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=0.85\textwidth]{fig_shap.png}
-\caption{SHAP feature importance (left) and feature effects (right) for XGBoost on 3,000 test stays.}
-\label{fig:shap}
-\end{figure*}
 
 \subsection{Subgroup Performance}
 Discrimination varied most across age bands, from an AUROC of 0.833 in patients older than 85 and 0.845 in those aged
@@ -458,26 +494,9 @@ mortality was under-estimated for patients with unknown race (observed 18.5\%, p
 in the neuro-intermediate unit (1.7\% versus 5.0\%). Several race and care-unit groups had fewer than 100 deaths, so
 their estimates are imprecise.
 
-\begin{table}[!t]
-\caption{Range of test-set AUROC across subgroups (groups with $\geq$100 deaths)}
-\label{tab:subgroups}
-\centering
-\footnotesize
-\input{tables/tab_subgroups.tex}
-\end{table}
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=0.95\textwidth]{fig_subgroups.png}
-\caption{Subgroup AUROC with 95\% CIs (left) and observed versus mean predicted mortality (right) for the final model.
-Open markers denote subgroups with fewer than 100 deaths.}
-\label{fig:subgroups}
-\end{figure*}
-
 \subsection{Missing-Data Strategies and Temporal Hold-Out}
 Complete-case training kept only 15\% of the training stays. When the resulting models were applied to all test
-stays, AUPRC fell from 0.471 to 0.437 for logistic regression and from 0.534 to 0.503 for XGBoost (Table~\ref{tab:missing},
-Fig.~\ref{fig:missing}). The other three strategies performed almost identically, partly because only one of the
+stays, AUPRC fell from 0.471 to 0.437 for logistic regression and from 0.534 to 0.503 for XGBoost (Table~\ref{tab:missing}). The other three strategies performed almost identically, partly because only one of the
 40 selected features was a missing-value indicator. On the complete-case test subset, complete-case training gave
 logistic regression a small advantage (AUPRC 0.615 versus 0.597) but still left XGBoost behind (0.648 versus 0.660).
 
@@ -487,29 +506,8 @@ overlapped. Observed mortality was higher in the later period (12.8\% versus 10.
 followed this change, but the calibration slope fell to 0.81 for logistic regression and 0.88 for XGBoost, indicating
 mild over-confidence on the newest data.
 
-\begin{table*}[!t]
-\caption{Missing-data strategies (isotonic-calibrated; CC = complete-case test subset)}
-\label{tab:missing}
-\centering
-\footnotesize
-\input{tables/tab_missing.tex}
-\end{table*}
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=0.85\textwidth]{fig_missing_strategies.png}
-\caption{AUPRC and ECE by missing-data strategy on all test stays.}
-\label{fig:missing}
-\end{figure*}
-
-\begin{table}[!t]
-\caption{Temporal hold-out using the admission period}
-\label{tab:temporal}
-\centering
-\scriptsize
-\setlength{\tabcolsep}{3pt}
-\input{tables/tab_temporal.tex}
-\end{table}
+% all result tables and figures must appear before the Discussion starts (none inside Discussion/Conclusion)
+\FloatBarrier
 
 % =====================================================================================================
 \section{Discussion}
