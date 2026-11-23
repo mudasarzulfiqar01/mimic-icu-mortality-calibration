@@ -32,3 +32,6 @@ desktop.ini
 3_report/*.fdb_latexmk
 3_report/*.synctex.gz
 3_report/main.pdf
+
+# --- personal credential documents (submitted to the instructor, never published) ---
+3_report/credentials/
